@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Fleet Management - XT Shipping{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1>🚢 Fleet Management</h1>
+        <p class="page-subtitle">Manage XT Group's global vessel fleet</p>
+    </div>
+
+    <div class="search-bar">
+        <form method="GET" class="search-form">
+            <input type="text" name="search" placeholder="Search by vessel name or IMO number..." 
+                   value="{{ request.args.get('search', '') }}" class="search-input">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+        <p class="security-note">⚠️ SECURITY ISSUE: Search is vulnerable to SQL injection</p>
+    </div>
+
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Vessel Name</th>
+                    <th>IMO Number</th>
+                    <th>Type</th>
+                    <th>Flag State</th>
+                    <th>Tonnage</th>
+                    <th>Year Built</th>
+                    <th>Status</th>
+                    <th>Last Inspection</th>
+                    <th>Insurance Expiry</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vessel in vessels %}
+                <tr class="{% if vessel.insurance_expiry < now().strftime('%Y-%m-%d') %}row-danger{% endif %}">
+                    <td><strong>{{ vessel.vessel_name }}</strong></td>
+                    <td>{{ vessel.imo_number }}</td>
+                    <td>{{ vessel.vessel_type }}</td>
+                    <td>{{ vessel.flag_state }}</td>
+                    <td>{{ "{:,}".format(vessel.gross_tonnage) }} GT</td>
+                    <td>{{ vessel.year_built }}</td>
+                    <td>
+                        <span class="badge badge-{% if vessel.status == 'Active' %}success{% else %}warning{% endif %}">
+                            {{ vessel.status }}
+                        </span>
+                    </td>
+                    <td>{{ vessel.last_inspection_date }}</td>
+                    <td>
+                        {% if vessel.insurance_expiry < now().strftime('%Y-%m-%d') %}
+                            <span class="badge badge-danger">EXPIRED: {{ vessel.insurance_expiry }}</span>
+                        {% else %}
+                            {{ vessel.insurance_expiry }}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="governance-alert">
+        <h3>🚨 Governance Issues Detected</h3>
+        <ul>
+            <li>❌ Vessels with expired insurance are still marked as "Active"</li>
+            <li>❌ No automatic alerts for upcoming inspection deadlines</li>
+            <li>❌ No role-based filtering (all users see all vessels)</li>
+            <li>❌ No approval workflow for status changes</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

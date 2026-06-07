@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block title %}Compliance Dashboard - XT Shipping{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1>✅ Compliance Dashboard</h1>
+        <p class="page-subtitle">Maritime regulations and compliance monitoring</p>
+    </div>
+
+    <!-- Critical Governance Issues -->
+    <div class="alert-section">
+        {% if expired_insurance %}
+        <div class="alert alert-danger">
+            <h3>🚨 CRITICAL: Vessels Operating with Expired Insurance</h3>
+            <p><strong>GOVERNANCE ISSUE:</strong> These vessels should be immediately grounded until insurance is renewed!</p>
+            <table class="alert-table">
+                <thead>
+                    <tr>
+                        <th>Vessel Name</th>
+                        <th>IMO Number</th>
+                        <th>Insurance Expired</th>
+                        <th>Days Overdue</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vessel in expired_insurance %}
+                    <tr>
+                        <td><strong>{{ vessel.vessel_name }}</strong></td>
+                        <td>{{ vessel.imo_number }}</td>
+                        <td>{{ vessel.insurance_expiry }}</td>
+                        <td class="text-danger">
+                            {{ (now() - vessel.insurance_expiry|datetime).days }} days
+                        </td>
+                        <td><span class="badge badge-danger">{{ vessel.status }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+        {% if expired_certificates %}
+        <div class="alert alert-warning">
+            <h3>⚠️ WARNING: Crew Members with Expired Certificates</h3>
+            <p><strong>GOVERNANCE ISSUE:</strong> Crew working without valid certifications violates maritime law!</p>
+            <table class="alert-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Vessel</th>
+                        <th>Certificate</th>
+                        <th>Expired</th>
+                        <th>Days Overdue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for crew in expired_certificates %}
+                    <tr>
+                        <td><strong>{{ crew.full_name }}</strong></td>
+                        <td>{{ crew.position }}</td>
+                        <td>{{ crew.vessel_name }}</td>
+                        <td>{{ crew.certificate_number }}</td>
+                        <td>{{ crew.certificate_expiry }}</td>
+                        <td class="text-warning">
+                            {{ (now() - crew.certificate_expiry|datetime).days }} days
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+        {% if excessive_hours %}
+        <div class="alert alert-warning">
+            <h3>⚠️ WARNING: Crew Exceeding Legal Working Hour Limits</h3>
+            <p><strong>GOVERNANCE ISSUE:</strong> Working hours exceed maritime labor convention limits (typically 200 hours/month)!</p>
+            <table class="alert-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Vessel</th>
+                        <th>Hours This Month</th>
+                        <th>Excess Hours</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for crew in excessive_hours %}
+                    <tr>
+                        <td><strong>{{ crew.full_name }}</strong></td>
+                        <td>{{ crew.position }}</td>
+                        <td>{{ crew.vessel_name }}</td>
+                        <td class="text-danger"><strong>{{ crew.hours_worked_this_month }}</strong></td>
+                        <td class="text-danger">+{{ crew.hours_worked_this_month - 200 }} hours</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Compliance Records -->
+    <div class="section">
+        <h2>📋 Regulatory Compliance Records</h2>
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Vessel</th>
+                        <th>Compliance Type</th>
+                        <th>Regulation</th>
+                        <th>Last Inspection</th>
+                        <th>Next Due</th>
+                        <th>Status</th>
+                        <th>Inspector</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in compliance_records %}
+                    <tr class="{% if record.status in ['Overdue', 'Non-Compliant'] %}row-danger{% endif %}">
+                        <td><strong>{{ record.vessel_name }}</strong></td>
+                        <td>{{ record.compliance_type }}</td>
+                        <td>{{ record.regulation_reference }}</td>
+                        <td>{{ record.inspection_date }}</td>
+                        <td>
+                            {% if record.next_inspection_due < now().strftime('%Y-%m-%d') %}
+                                <span class="badge badge-danger">OVERDUE: {{ record.next_inspection_due }}</span>
+                            {% else %}
+                                {{ record.next_inspection_due }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge badge-{% if record.status == 'Compliant' %}success{% elif record.status == 'Overdue' %}danger{% else %}warning{% endif %}">
+                                {{ record.status }}
+                            </span>
+                        </td>
+                        <td>{{ record.inspector_name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Governance Issues Summary -->
+    <div class="governance-summary">
+        <h2>🚨 Governance & Compliance Issues Summary</h2>
+        <div class="issue-grid">
+            <div class="issue-card issue-critical">
+                <h3>Critical Issues</h3>
+                <ul>
+                    <li>❌ Vessels operating with expired insurance</li>
+                    <li>❌ No automatic grounding of non-compliant vessels</li>
+                    <li>❌ Crew working with expired certificates</li>
+                    <li>❌ No enforcement of working hour limits</li>
+                </ul>
+            </div>
+            <div class="issue-card issue-high">
+                <h3>High Priority</h3>
+                <ul>
+                    <li>⚠️ Overdue inspections not blocked</li>
+                    <li>⚠️ Non-compliant vessels still operational</li>
+                    <li>⚠️ No automated compliance alerts</li>
+                    <li>⚠️ Missing regulatory reporting</li>
+                </ul>
+            </div>
+            <div class="issue-card issue-medium">
+                <h3>Medium Priority</h3>
+                <ul>
+                    <li>⚠️ No compliance dashboard for management</li>
+                    <li>⚠️ Missing audit trail for compliance changes</li>
+                    <li>⚠️ No integration with port state control</li>
+                    <li>⚠️ Incomplete IMO/SOLAS tracking</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <h3>ℹ️ About Maritime Compliance</h3>
+        <p><strong>Key Regulations:</strong></p>
+        <ul>
+            <li><strong>IMO (International Maritime Organization):</strong> Global maritime safety and security standards</li>
+            <li><strong>SOLAS (Safety of Life at Sea):</strong> Minimum safety standards for ships</li>
+            <li><strong>MARPOL (Marine Pollution):</strong> Prevention of pollution from ships</li>
+            <li><strong>MLC (Maritime Labour Convention):</strong> Crew welfare and working conditions</li>
+            <li><strong>ISPS (Ship and Port Facility Security):</strong> Security measures</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

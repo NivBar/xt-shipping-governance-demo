@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Cargo Management - XT Shipping{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1>📦 Cargo Management</h1>
+        <p class="page-subtitle">Track and manage shipments across the global fleet</p>
+    </div>
+
+    <div class="action-bar">
+        <a href="{{ url_for('create_cargo') }}" class="btn btn-primary">+ Create New Cargo</a>
+    </div>
+
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Vessel</th>
+                    <th>Cargo Type</th>
+                    <th>Weight (tons)</th>
+                    <th>Route</th>
+                    <th>Status</th>
+                    <th>Dangerous</th>
+                    <th>Created By</th>
+                    <th>Approved By</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cargo in cargo_list %}
+                <tr class="{% if cargo.created_by_name == cargo.approved_by_name %}row-warning{% endif %}">
+                    <td>{{ cargo.id }}</td>
+                    <td><strong>{{ cargo.vessel_name }}</strong></td>
+                    <td>{{ cargo.cargo_type }}</td>
+                    <td>{{ "%.1f"|format(cargo.weight_tons) }}</td>
+                    <td>{{ cargo.origin_port }} → {{ cargo.destination_port }}</td>
+                    <td>
+                        <span class="badge badge-{% if cargo.status == 'In Transit' %}info{% elif cargo.status == 'Delivered' %}success{% else %}warning{% endif %}">
+                            {{ cargo.status }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if cargo.dangerous_goods %}
+                            <span class="badge badge-danger">⚠️ YES</span>
+                        {% else %}
+                            <span class="badge badge-success">No</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ cargo.created_by_name }}</td>
+                    <td>
+                        {% if cargo.created_by_name == cargo.approved_by_name %}
+                            <span class="text-warning">⚠️ {{ cargo.approved_by_name }}</span>
+                        {% else %}
+                            {{ cargo.approved_by_name }}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="governance-alert">
+        <h3>🚨 Segregation of Duties Violations</h3>
+        <p><strong>GOVERNANCE ISSUE:</strong> Rows highlighted in yellow show cargo where the same person created AND approved the shipment!</p>
+        <ul>
+            <li>❌ No approval workflow - users can self-approve</li>
+            <li>❌ Dangerous goods approved by single person</li>
+            <li>❌ No dual authorization for high-value cargo</li>
+            <li>❌ Missing compliance checks for hazardous materials</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
