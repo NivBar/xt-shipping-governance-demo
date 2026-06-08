@@ -18,7 +18,8 @@ source venv/bin/activate
 
 # Install dependencies
 echo "Installing dependencies..."
-pip install -q -r requirements.txt
+pip install --upgrade pip
+pip install Flask==3.0.0 python-dotenv==1.0.0 bcrypt==4.1.2
 
 # Initialize database
 echo "Initializing database..."
