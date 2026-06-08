@@ -25,11 +25,13 @@ pip install --index-url https://pypi.org/simple/ Flask==3.0.0 python-dotenv==1.0
 echo "Initializing database..."
 cd database
 python3 init_db_fixed.py
+# Copy database to parent directory where app expects it
+cp xt_shipping_fixed.db ../
 cd ..
 
 # Start the application
 echo ""
-echo "✅ Application starting on http://localhost:5001"
+echo "✅ Application starting on http://localhost:5000"
 echo "📝 Login credentials: admin / 0000"
 echo ""
 python3 app.py

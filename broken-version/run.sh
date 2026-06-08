@@ -25,6 +25,8 @@ pip install --index-url https://pypi.org/simple/ Flask==3.0.0 python-dotenv==1.0
 echo "Initializing database..."
 cd database
 python3 init_db.py
+# Copy database to parent directory where app expects it
+cp xt_shipping.db ../
 cd ..
 
 # Start the application
