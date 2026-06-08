@@ -16,10 +16,10 @@ fi
 # Activate virtual environment
 source venv/bin/activate
 
-# Install dependencies
+# Install dependencies using PyPI directly (bypass IBM artifactory)
 echo "Installing dependencies..."
-pip install --upgrade pip
-pip install Flask==3.0.0 python-dotenv==1.0.0
+pip install --index-url https://pypi.org/simple/ --upgrade pip
+pip install --index-url https://pypi.org/simple/ Flask==3.0.0 python-dotenv==1.0.0
 
 # Initialize database
 echo "Initializing database..."
