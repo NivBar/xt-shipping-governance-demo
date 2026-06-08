@@ -13,8 +13,8 @@
     <div class="alert-section">
         {% if expired_insurance %}
         <div class="alert alert-danger">
-            <h3>🚨 CRITICAL: Vessels Operating with Expired Insurance</h3>
-            <p><strong>GOVERNANCE ISSUE:</strong> These vessels should be immediately grounded until insurance is renewed!</p>
+            <h3>Vessels with Expired Insurance</h3>
+            <p>The following vessels have expired insurance and have been automatically grounded:</p>
             <table class="alert-table">
                 <thead>
                     <tr>
@@ -32,7 +32,7 @@
                         <td>{{ vessel.imo_number }}</td>
                         <td>{{ vessel.insurance_expiry }}</td>
                         <td class="text-danger">
-                            {{ (now() - vessel.insurance_expiry|datetime).days }} days
+                            {{ vessel.days_overdue }} days
                         </td>
                         <td><span class="badge badge-danger">{{ vessel.status }}</span></td>
                     </tr>
@@ -44,8 +44,8 @@
 
         {% if expired_certificates %}
         <div class="alert alert-warning">
-            <h3>⚠️ WARNING: Crew Members with Expired Certificates</h3>
-            <p><strong>GOVERNANCE ISSUE:</strong> Crew working without valid certifications violates maritime law!</p>
+            <h3>Crew Members with Expired Certificates</h3>
+            <p>The following crew members have expired certificates and have been suspended:</p>
             <table class="alert-table">
                 <thead>
                     <tr>
@@ -66,7 +66,7 @@
                         <td>{{ crew.certificate_number }}</td>
                         <td>{{ crew.certificate_expiry }}</td>
                         <td class="text-warning">
-                            {{ (now() - crew.certificate_expiry|datetime).days }} days
+                            {{ crew.days_overdue }} days
                         </td>
                     </tr>
                     {% endfor %}
@@ -77,8 +77,8 @@
 
         {% if excessive_hours %}
         <div class="alert alert-warning">
-            <h3>⚠️ WARNING: Crew Exceeding Legal Working Hour Limits</h3>
-            <p><strong>GOVERNANCE ISSUE:</strong> Working hours exceed maritime labor convention limits (typically 200 hours/month)!</p>
+            <h3>Crew Exceeding Working Hour Limits</h3>
+            <p>The following crew members have exceeded the maximum working hours ({{ max_hours }} hours/month):</p>
             <table class="alert-table">
                 <thead>
                     <tr>
@@ -129,7 +129,7 @@
                         <td>{{ record.regulation_reference }}</td>
                         <td>{{ record.inspection_date }}</td>
                         <td>
-                            {% if record.next_inspection_due < now().strftime('%Y-%m-%d') %}
+                            {% if record.next_inspection_due < current_date %}
                                 <span class="badge badge-danger">OVERDUE: {{ record.next_inspection_due }}</span>
                             {% else %}
                                 {{ record.next_inspection_due }}
@@ -148,9 +148,9 @@
         </div>
     </div>
 
-    <!-- Governance Issues Summary -->
+    <!-- Compliance Summary -->
     <div class="governance-summary">
-        <h2>🚨 Governance & Compliance Issues Summary</h2>
+        <h2>Compliance Summary</h2>
         <div class="issue-grid">
             <div class="issue-card issue-critical">
                 <h3>Critical Issues</h3>

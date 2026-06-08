@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Crew Management - XT Shipping{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1>👥 Crew Management</h1>
+        <p class="page-subtitle">Manage personnel across the global fleet</p>
+    </div>
+
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Vessel</th>
+                    <th>Nationality</th>
+                    <th>Certificate</th>
+                    <th>Cert. Expiry</th>
+                    <th>Hours/Month</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in crew_list %}
+                <tr class="{% if member.certificate_expiry < current_date or member.hours_worked_this_month > 200 %}row-danger{% endif %}">
+                    <td><strong>{{ member.full_name }}</strong></td>
+                    <td>{{ member.position }}</td>
+                    <td>{{ member.vessel_name }}</td>
+                    <td>{{ member.nationality }}</td>
+                    <td>{{ member.certificate_number }}</td>
+                    <td>
+                        {% if member.certificate_expiry < current_date %}
+                            <span class="badge badge-danger">EXPIRED: {{ member.certificate_expiry }}</span>
+                        {% else %}
+                            {{ member.certificate_expiry }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if member.hours_worked_this_month > 200 %}
+                            <span class="text-danger"><strong>{{ member.hours_worked_this_month }}</strong> ⚠️</span>
+                        {% else %}
+                            {{ member.hours_worked_this_month }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge badge-{% if member.status == 'Active' %}success{% else %}secondary{% endif %}">
+                            {{ member.status }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="info-section">
+        <h3>Crew Management</h3>
+        <p>Maritime Labour Convention (MLC) compliance monitoring:</p>
+        <ul>
+            <li>Crew with expired certificates are automatically suspended</li>
+            <li>Working hours limited to {{ max_hours }} hours/month</li>
+            <li>Automatic alerts sent 30 days before certificate expiry</li>
+            <li>Rest period tracking enforced</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

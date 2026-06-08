@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}XT Shipping Management{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/maritime-theme.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% if session.user_id %}
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="logo">⚓</span>
+                <span class="brand-name">XT Shipping</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a></li>
+                <li><a href="{{ url_for('fleet') }}" class="nav-link">Fleet</a></li>
+                <li><a href="{{ url_for('cargo') }}" class="nav-link">Cargo</a></li>
+                <li><a href="{{ url_for('crew') }}" class="nav-link">Crew</a></li>
+                <li><a href="{{ url_for('financial') }}" class="nav-link">Financial</a></li>
+                <li><a href="{{ url_for('compliance') }}" class="nav-link">Compliance</a></li>
+                <li><a href="{{ url_for('logs') }}" class="nav-link">Logs</a></li>
+            </ul>
+            <div class="nav-user">
+                <span class="user-info">
+                    <span class="user-icon">👤</span>
+                    <span class="user-name">{{ session.username }}</span>
+                    <span class="user-role">({{ session.role }})</span>
+                </span>
+                <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 XT Group - Global Shipping Excellence</p>
+            <p class="warning">⚠️ DEMO SYSTEM - Contains intentional governance and security issues for educational purposes</p>
+        </div>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

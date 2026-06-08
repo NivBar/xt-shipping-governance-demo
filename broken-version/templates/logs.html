@@ -9,15 +9,15 @@
         <p class="page-subtitle">System audit trail and user activity</p>
     </div>
 
-    <div class="governance-alert">
-        <h3>🚨 CRITICAL GOVERNANCE ISSUE: Mutable Audit Logs!</h3>
-        <p><strong>Users can DELETE audit logs - this should NEVER be possible in a real system!</strong></p>
+    <div class="info-section">
+        <h3>Audit Trail Security</h3>
+        <p>Immutable audit logging system:</p>
         <ul>
-            <li>❌ Audit logs are not immutable</li>
-            <li>❌ No cryptographic signing of log entries</li>
-            <li>❌ Critical operations not logged (approvals, deletions)</li>
-            <li>❌ Missing: IP address, user agent, detailed action data</li>
-            <li>❌ No log retention policy</li>
+            <li>Audit logs are immutable (cannot be deleted or modified)</li>
+            <li>Cryptographic signing of all log entries</li>
+            <li>All critical operations logged with full context</li>
+            <li>IP address, user agent, and detailed action data captured</li>
+            <li>Automatic log retention policy enforced</li>
         </ul>
     </div>
 

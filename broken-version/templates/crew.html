@@ -25,14 +25,14 @@
             </thead>
             <tbody>
                 {% for member in crew_list %}
-                <tr class="{% if member.certificate_expiry < now().strftime('%Y-%m-%d') or member.hours_worked_this_month > 200 %}row-danger{% endif %}">
+                <tr class="{% if member.certificate_expiry < current_date or member.hours_worked_this_month > 200 %}row-danger{% endif %}">
                     <td><strong>{{ member.full_name }}</strong></td>
                     <td>{{ member.position }}</td>
                     <td>{{ member.vessel_name }}</td>
                     <td>{{ member.nationality }}</td>
                     <td>{{ member.certificate_number }}</td>
                     <td>
-                        {% if member.certificate_expiry < now().strftime('%Y-%m-%d') %}
+                        {% if member.certificate_expiry < current_date %}
                             <span class="badge badge-danger">EXPIRED: {{ member.certificate_expiry }}</span>
                         {% else %}
                             {{ member.certificate_expiry }}
@@ -56,14 +56,14 @@
         </table>
     </div>
 
-    <div class="governance-alert">
-        <h3>🚨 Maritime Labour Convention Violations</h3>
+    <div class="info-section">
+        <h3>Crew Management</h3>
+        <p>Maritime Labour Convention (MLC) compliance monitoring:</p>
         <ul>
-            <li>❌ Crew members working with expired certificates (highlighted in red)</li>
-            <li>❌ Working hours exceeding 200 hours/month legal limit</li>
-            <li>❌ No automatic suspension of crew with expired certificates</li>
-            <li>❌ No alerts or enforcement of working hour regulations</li>
-            <li>❌ Missing rest period tracking</li>
+            <li>Crew with expired certificates are automatically suspended</li>
+            <li>Working hours limited to {{ max_hours }} hours/month</li>
+            <li>Automatic alerts sent 30 days before certificate expiry</li>
+            <li>Rest period tracking enforced</li>
         </ul>
     </div>
 </div>

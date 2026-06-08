@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Create Cargo - XT Shipping{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1>📦 Create New Cargo Shipment</h1>
+        <p class="page-subtitle">Add a new cargo shipment to the system</p>
+    </div>
+
+    <div class="form-container">
+        <form method="POST" class="data-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="vessel_id">Vessel *</label>
+                    <select id="vessel_id" name="vessel_id" required class="form-control">
+                        <option value="">Select a vessel...</option>
+                        {% for vessel in vessels %}
+                        <option value="{{ vessel.id }}">{{ vessel.vessel_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="cargo_type">Cargo Type *</label>
+                    <input type="text" id="cargo_type" name="cargo_type" required 
+                           class="form-control" placeholder="e.g., Electronics, Grain, Chemicals">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="3" 
+                          class="form-control" placeholder="Detailed cargo description"></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="weight_tons">Weight (tons) *</label>
+                    <input type="number" id="weight_tons" name="weight_tons" step="0.1" required 
+                           class="form-control" placeholder="0.0">
+                </div>
+
+                <div class="form-group">
+                    <label for="origin_port">Origin Port *</label>
+                    <input type="text" id="origin_port" name="origin_port" required 
+                           class="form-control" placeholder="e.g., Shanghai">
+                </div>
+
+                <div class="form-group">
+                    <label for="destination_port">Destination Port *</label>
+                    <input type="text" id="destination_port" name="destination_port" required 
+                           class="form-control" placeholder="e.g., Rotterdam">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="dangerous_goods" value="1">
+                    <span>⚠️ Dangerous Goods (Hazardous Materials)</span>
+                </label>
+            </div>
+
+            <div class="info-box">
+                <h4>ℹ️ Approval Process</h4>
+                <p>This cargo will be submitted for manager approval before loading.</p>
+                <p>Dangerous goods require additional safety documentation and dual authorization.</p>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Create Cargo</button>
+                <a href="{{ url_for('cargo') }}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
