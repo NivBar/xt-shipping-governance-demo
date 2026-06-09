@@ -63,7 +63,7 @@ body {
 }
 
 .logo-img {
-    height: 50px;
+    height: 200px;
     width: auto;
     object-fit: contain;
 }
@@ -762,7 +762,7 @@ body {
 }
 
 .login-logo-img {
-    height: 120px;
+    height: 480px;
     width: auto;
     object-fit: contain;
     display: block;
