@@ -762,11 +762,12 @@ body {
 }
 
 .login-logo-img {
-    height: 480px;
+    height: 200px;
     width: auto;
+    max-width: 100%;
     object-fit: contain;
     display: block;
-    margin: 0 auto 1rem;
+    margin: 0 auto 2rem;
 }
 
 .login-header h1 {
